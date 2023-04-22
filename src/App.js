@@ -1,55 +1,55 @@
-import { Component } from 'react';
-import './App.css';
+import { Component } from "react";
+
+import CardList from "./Component/Card-List/Card-list.component";
+import SearchBox from "./Component/SearchBox/Search-Box.component";
+import './App.css'
+
 
 class App extends Component {
-
   constructor() {
     super();
     this.state = {
-      Monsters:[ ],
-      searchValue:''
-    }
+      Monsters: [],
+      searchValue: "",
+    };
   }
-//component did mount is a lifecycle method
-//it is called when the component is mounted
-//it is called only once
-componentDidMount(){  
-  fetch('https://jsonplaceholder.typicode.com/users')
-  .then(response => response.json())
-  .then(users => this.setState({Monsters:users}))
-}
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) => this.setState({ Monsters: users }));
+  }
 
-  render()  {
+  onchangebutton = (event) => {
+    
 
-    const filteredMosters = this.state.Monsters.filter((Monster)=>{
-      return Monster.name.toLowerCase().includes(this.state.searchValue.toLowerCase())
-    })
+    const searchFild = event.target.value.toLowerCase();
 
-  return (
-    <div className="App">
-      <input type="search" placeholder="search monsters" onChange={(event)=>{
-            console.log(event.target.value)
+    this.setState({ searchValue: searchFild });
+  };
 
-          const searchFild =event.target.value.toLowerCase();
+  render() {
+
+  const {Monsters, searchValue} = this.state;
+  const {onchangebutton} = this;
+  console.log('app')
+
+
+    const filteredMosters = Monsters.filter((Monster) => {
+      return Monster.name
+        .toLowerCase()
+        .includes(searchValue.toLowerCase());
+    });
+
+    return (
+      <div className="App">
+        <h1 className="app-title">Monster Rolodex</h1>
+      
+        <SearchBox  searchBoxhandler ={onchangebutton}  searchholder={'Search Monster'}  namedclass={"Monster search"}/>
         
-          this.setState({searchValue:searchFild}) 
-          
-
-
-          
-      }} />
-
-            {filteredMosters.map((Monster)=>{
-
-              return<div key={Monster.id}> 
-                
-                <h1 >{Monster.name}</h1>
-              </div>
-               
-            })}
-    </div>
-  );
-}
+      <CardList monsters= {filteredMosters} />  
+      </div>
+    );
+  }
 }
 
 export default App;
